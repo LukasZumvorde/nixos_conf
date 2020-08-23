@@ -21,16 +21,33 @@ in
 
 ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
-  boot.initrd.checkJournalingFS = false;
-  virtualisation.virtualbox.guest.enable = true;
+  # # Use the GRUB 2 boot loader.
+  # boot.loader.grub.enable = true;
+  # boot.loader.grub.version = 2;
+  # # boot.loader.grub.efiSupport = true;
+  # # boot.loader.grub.efiInstallAsRemovable = true;
+  # # boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  # # Define on which hard drive you want to install Grub.
+  # boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
+  # boot.initrd.checkJournalingFS = false;
+  # virtualisation.virtualbox.guest.enable = true;
+
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub = {
+    enable = true;
+    version = 2;
+    device = "nodev";
+    efiSupport = true;
+    enableCryptodisk = true;
+  };
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.initrd.luks.devices = {
+    root = {
+      device = "/dev/disk/by-uuid/TODO";
+      preLVM = true;
+    };
+  };
+
 
   # networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -47,7 +64,7 @@ in
 
   networking.networkmanager.enable = true;
   programs.nm-applet.enable = true;
-  
+
 
   # Select internationalisation properties.
   i18n.defaultLocale = "de_DE.UTF-8";
@@ -180,7 +197,7 @@ in
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.lukas = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; 
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 
   # allow users to connect to the Nix daemon
@@ -226,4 +243,3 @@ in
   system.stateVersion = "20.03"; # Did you read the comment?
 
 }
-
